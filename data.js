@@ -13,283 +13,261 @@ const TYPES = {
 };
 
 // ============================================================
-// 应届生题库（12题，每种类型恰好出现8次）
+// 应届生题库（12题）
+// 计分规则：主类型 +2，副类型（subtype）+1
+// 分布：Q1:PR,M,D,PJ / Q2:PR,L,D,PJ / Q3:PR,L,M,PJ / Q4:PR,L,M,P(+D)
+//       Q5:P,M,D,PJ  / Q6:P,L,D,PJ  / Q7:P,L,M,PJ  / Q8:P,L,M,D
+//       Q9:P,PR,M(+L),PJ / Q10:P,PR,M,D / Q11:P,PR,L,PJ / Q12:P,PR,L,D
 // ============================================================
 const QUESTIONS_FRESH = [
   {
     id: 1,
-    text: '你看到一组复杂数据时，第一反应是什么？',
+    text: '群里有人提议明天一起出去玩，大家开始刷屏，你脑子里第一个念头是？',
     options: [
-      { text: '先看整体趋势和关键异常，判断哪里不对劲', type: TYPES.DATA },
-      { text: '先看目标有没有达成，差距来自需求、资源还是节奏', type: TYPES.PLANNER },
-      { text: '先看成本、价格和外部条件有没有出现变化', type: TYPES.PROCUREMENT },
-      { text: '先看事项流转状态，哪个环节出现了卡顿或遗漏', type: TYPES.LOGISTICS }
+      { text: '先确认预算、人均和大概玩法，不然后面很容易超支', type: TYPES.PROCUREMENT },
+      { text: '先定一个集合时间和地点，其他细节路上再调整', type: TYPES.MANUFACTURE },
+      { text: '先看有几个人真的能去，不然聊半天也组不起来', type: TYPES.DATA },
+      { text: '先把大家的意见收一收，赶紧定一个可执行方案', type: TYPES.PROJECT }
     ]
   },
   {
     id: 2,
-    text: '你平时更容易被哪类信息吸引？',
+    text: '你在找兼职，看到一个描述很模糊的招聘帖，你最先想搞清楚的是？',
     options: [
-      { text: '一件事的整体节奏和先后安排是否合理', type: TYPES.PLANNER },
-      { text: '某个东西到底值不值、有没有更好的选择', type: TYPES.PROCUREMENT },
-      { text: '某个流程或操作有没有可以提升效率的地方', type: TYPES.MANUFACTURE },
-      { text: '谁负责什么、有没有人在跟进、有没有出现卡点', type: TYPES.PROJECT }
+      { text: '薪资怎么结，有没有押金、扣钱或隐藏条件', type: TYPES.PROCUREMENT },
+      { text: '工作地点、排班方式、每天具体做什么', type: TYPES.LOGISTICS },
+      { text: '有没有真实评价、过往反馈，和同类岗位比靠谱吗', type: TYPES.DATA },
+      { text: '团队怎么带人，遇到问题有没有人能对接', type: TYPES.PROJECT }
     ]
   },
   {
     id: 3,
-    text: '遇到一个复杂问题，没有标准答案，你更倾向于？',
+    text: '开学搬进新宿舍，你最先做的是什么？',
     options: [
-      { text: '把问题拆开，找出关键变量，一层一层推导', type: TYPES.PLANNER },
-      { text: '梳理整件事的流转路径，找出哪个节点卡住了', type: TYPES.LOGISTICS },
-      { text: '直接动手试一个方案，在实践中找答案', type: TYPES.MANUFACTURE },
-      { text: '找相关人一起讨论，整合多方视角再决策', type: TYPES.PROJECT }
+      { text: '先和室友说清公共用品怎么分摊，避免后面算不清', type: TYPES.PROCUREMENT },
+      { text: '先规划床铺、桌面、柜子和公共区怎么放最顺手', type: TYPES.LOGISTICS },
+      { text: '先把箱子打开整理起来，缺什么边收拾边补', type: TYPES.MANUFACTURE },
+      { text: '先聊聊大家作息和习惯，减少后面互相打扰', type: TYPES.PROJECT }
     ]
   },
   {
     id: 4,
-    text: '和朋友一起组织一次旅行，你最容易主动承担哪块？',
+    text: '组员临时有事，把他的任务丢给你，你第一步做什么？',
     options: [
-      { text: '把出发时间、住宿、行程节奏排成一个完整方案', type: TYPES.PLANNER },
-      { text: '搜几个酒店和交通选项，比较价格和服务是否划算靠谱', type: TYPES.PROCUREMENT },
-      { text: '做一个共享文档，把预算、路线、待办和风险都列清楚', type: TYPES.DATA },
-      { text: '收集所有人的时间和偏好，推动大家拍板决定', type: TYPES.PROJECT }
+      { text: '先确认这部分最终要交付什么，别接过来才发现方向错了', type: TYPES.PROCUREMENT },
+      { text: '先把他留下的文件、聊天记录和版本整理清楚', type: TYPES.LOGISTICS },
+      { text: '先接住最急的部分，保证小组进度别断掉', type: TYPES.MANUFACTURE },
+      { text: '先判断这块还差多少工作量，会不会影响整体节奏', type: TYPES.PLANNER, subtype: TYPES.DATA }
     ]
   },
   {
     id: 5,
-    text: '朋友说想开一家小店，你的第一反应更接近哪种？',
+    text: '期末，几门课的作业和考试全挤在同一周，你的第一反应是？',
     options: [
-      { text: '先看租金、原料、人力和毛利，判断这门生意赚不赚钱', type: TYPES.PROCUREMENT },
-      { text: '先想每天货怎么进、怎么存、怎么卖，流转能不能跑顺', type: TYPES.LOGISTICS },
-      { text: '先研究周边同类店的情况，找出市场机会和差异化方向', type: TYPES.DATA },
-      { text: '先做一个开店推进表，明确选址、装修、试营业的节点', type: TYPES.PROJECT }
+      { text: '先按截止日期和难度排优先级，避免所有事一起爆', type: TYPES.PLANNER },
+      { text: '先挑最难、最卡人的那门开始做，别拖到最后', type: TYPES.MANUFACTURE },
+      { text: '先看每门课占分比例和自己薄弱点，判断哪里最值得花时间', type: TYPES.DATA },
+      { text: '约几个同学分工整理资料，互相补缺口', type: TYPES.PROJECT }
     ]
   },
   {
     id: 6,
-    text: '你在选择一份实习/工作机会时，最先看什么？',
+    text: '寒假才发现高铁直达票全卖完了，你的第一反应是？',
     options: [
-      { text: '这个岗位能不能训练系统性地思考和安排事情的能力', type: TYPES.PLANNER },
-      { text: '这个岗位是不是流程清晰、事情具体，能快速上手', type: TYPES.LOGISTICS },
-      { text: '这个岗位能不能接触一线操作，解决真实运转中的问题', type: TYPES.MANUFACTURE },
-      { text: '这个岗位能不能接触到数据，让我从中发现规律和问题', type: TYPES.DATA }
+      { text: '把高铁、飞机、大巴、中转都拉出来，比哪个整体最稳', type: TYPES.PLANNER },
+      { text: '先看中转时间、换乘站距离和行李能不能赶得上', type: TYPES.LOGISTICS },
+      { text: '查候补成功率和历史出票情况，判断要不要继续等', type: TYPES.DATA },
+      { text: '问问同学有没有同路的，能不能一起拼车或换方案', type: TYPES.PROJECT }
     ]
   },
   {
     id: 7,
-    text: '活动现场突发状况（设备坏了/场地有问题），你的第一反应是？',
+    text: '小组展示前一小时，负责演讲的人说嗓子哑了，你的第一反应是？',
     options: [
-      { text: '快速找外部替代方案或资源，让现场继续运转', type: TYPES.PROCUREMENT },
-      { text: '直接上手看能不能解决，先让现场稳下来', type: TYPES.MANUFACTURE },
-      { text: '先判断影响范围有多大，决定要不要升级处理', type: TYPES.DATA },
-      { text: '立刻通知相关人各就各位，明确分工各自处理', type: TYPES.PROJECT }
+      { text: '先判断还剩多久、谁最适合顶上、要改多少内容', type: TYPES.PLANNER },
+      { text: '先把稿子、PPT备注和演讲顺序交接清楚', type: TYPES.LOGISTICS },
+      { text: '先把最关键的部分接过来，保证展示能正常完成', type: TYPES.MANUFACTURE },
+      { text: '立刻拉大家对齐，重新分配演讲和答辩部分', type: TYPES.PROJECT }
     ]
   },
   {
     id: 8,
-    text: '小组作业分工后，有人突然说完不成自己的部分，你会？',
+    text: '接到一个完全没做过的任务，不知道从哪里下手，你会？',
     options: [
-      { text: '重新评估整体进度，看哪些地方需要调整节奏', type: TYPES.PLANNER },
-      { text: '先确认手头已有的内容，看能不能接过来先跑', type: TYPES.LOGISTICS },
-      { text: '先看他的进度到哪了，评估差距有多大再决定怎么处理', type: TYPES.DATA },
-      { text: '召集大家快速对齐，重新分工确保按时交付', type: TYPES.PROJECT }
+      { text: '先把任务拆成几个步骤，确定先做哪一步、后做哪一步', type: TYPES.PLANNER },
+      { text: '先找模板、流程或往年版本，照着标准框架搭起来', type: TYPES.LOGISTICS },
+      { text: '先做最确定能做的部分，边做边把问题暴露出来', type: TYPES.MANUFACTURE },
+      { text: '先搜案例和方法，对比哪种路径最靠谱', type: TYPES.DATA }
     ]
   },
   {
     id: 9,
-    text: '团队任务卡住了，几个人意见不统一，你更可能做什么？',
+    text: '社团要下个月办一次校外活动，现在什么都没准备，你第一步做什么？',
     options: [
-      { text: '分析几种方案各自的成本和代价，帮大家做取舍', type: TYPES.PROCUREMENT },
-      { text: '先把大家已经完成的部分整理清楚，找到可以继续推进的地方', type: TYPES.LOGISTICS },
-      { text: '直接动手先推进一个方向，边做边调整', type: TYPES.MANUFACTURE },
-      { text: '召集大家开个短会，把各方诉求说清楚，推动达成共识', type: TYPES.PROJECT }
+      { text: '倒推时间线，拆出场地、人员、物料、宣传各自要多久', type: TYPES.PLANNER },
+      { text: '先确认预算、规模和底线，判断活动能做到什么程度', type: TYPES.PROCUREMENT },
+      { text: '先锁最关键的场地和资源，避免后面想做也做不了', type: TYPES.MANUFACTURE, subtype: TYPES.LOGISTICS },
+      { text: '先开个短会，把负责人和下一步动作定下来', type: TYPES.PROJECT }
     ]
   },
   {
     id: 10,
-    text: '活动马上开始，你最容易反复确认什么？',
+    text: '要独立规划一次出行，但完全没去过那个地方，你最先做什么？',
     options: [
-      { text: '整体时间节奏和各环节衔接有没有问题', type: TYPES.PLANNER },
-      { text: '外部资源和物资有没有全部到位', type: TYPES.PROCUREMENT },
-      { text: '现场的设备、布置和操作流程准备好了没有', type: TYPES.MANUFACTURE },
-      { text: '报名人数、预期到场率和反馈渠道是否正常', type: TYPES.DATA }
+      { text: '先定总天数和大致路线，避免行程前后接不上', type: TYPES.PLANNER },
+      { text: '先算预算上限，判断这个目的地值不值得去', type: TYPES.PROCUREMENT },
+      { text: '先把最难抢的票和酒店查起来，能订就先锁住', type: TYPES.MANUFACTURE },
+      { text: '先看几篇攻略和评价，对比不同路线的坑和亮点', type: TYPES.DATA }
     ]
   },
   {
     id: 11,
-    text: '你做完一件事，最后一步通常会做什么？',
+    text: '你被临时拉进一个陌生小组，下周要一起交作业，你第一步做什么？',
     options: [
-      { text: '对照最初的目标，看结果有没有达到预期', type: TYPES.PLANNER },
-      { text: '核算这次的投入和产出，值不值、有没有可优化的地方', type: TYPES.PROCUREMENT },
-      { text: '确认每个步骤都按顺序完成了，有没有遗漏', type: TYPES.LOGISTICS },
-      { text: '检查最终结果，有没有质量问题或可以改进的地方', type: TYPES.MANUFACTURE }
+      { text: '先确认截止时间和剩余周期，判断还能怎么排', type: TYPES.PLANNER },
+      { text: '先搞清楚作业要求和完成标准，避免方向跑偏', type: TYPES.PROCUREMENT },
+      { text: '先把已有材料、版本和分工记录理清楚', type: TYPES.LOGISTICS },
+      { text: '先了解大家擅长什么，再重新对齐分工方式', type: TYPES.PROJECT }
     ]
   },
   {
     id: 12,
-    text: '如果让你负责一个社团或小团队的物资管理，你会先做什么？',
+    text: '你发现一门课的成绩比预期低很多，不知道为什么，你最先做什么？',
     options: [
-      { text: '规划领取、存放、归还的流程，保证每次进出有记录', type: TYPES.LOGISTICS },
-      { text: '把常用物资分类整理，确保需要时能快速找到', type: TYPES.MANUFACTURE },
-      { text: '做一个表格，记录库存数量、使用情况和异常', type: TYPES.DATA },
-      { text: '先和各组确认他们的需求，再统一规划采购和管理方式', type: TYPES.PROJECT }
+      { text: '先回顾每次作业、考试和复习节点，判断问题从哪里开始偏了', type: TYPES.PLANNER },
+      { text: '去问清评分标准和扣分点，看看是不是理解错了要求', type: TYPES.PROCUREMENT },
+      { text: '把提交记录、反馈和作业版本都翻出来，从细节里找原因', type: TYPES.LOGISTICS },
+      { text: '把自己的分数、平均分和各部分占比拉出来，看差距主要在哪', type: TYPES.DATA }
     ]
   }
 ];
 
 // ============================================================
-// 社招题库（15题，每种类型恰好出现10次）
+// 社招题库（12题）
+// 计分规则：主类型 +2，副类型（subtype）+1
+// 分布：Q1:PR,M,D,PJ / Q2:PR(+D),L,D,PJ / Q3:PR,L,M,PJ / Q4:PR,L,M,D
+//       Q5:P,M,D(+PR),PJ / Q6:P,L,D,PJ   / Q7:P,L,M,PJ  / Q8:P,L,M,D
+//       Q9:P,PR,M,PJ     / Q10:P,PR,M,D   / Q11:P,PR,L,PJ / Q12:P,PR,L,D
 // ============================================================
 const QUESTIONS_CAREER = [
   {
     id: 1,
-    text: '你收到一份供应链月度数据报告，第一眼会看什么？',
+    text: '刚到一家新公司，还没摸清楚状况，你第一个月最想搞清楚的是？',
     options: [
-      { text: '整体趋势和关键异常，判断哪里出现了明显偏移', type: TYPES.DATA },
-      { text: '供需平衡和计划达成，看节奏和预测有没有偏差', type: TYPES.PLANNER },
-      { text: '外部资源侧的变化，价格走势或合作方的稳定性', type: TYPES.PROCUREMENT },
-      { text: '货物流转的时效和异常，哪个环节出现了卡顿', type: TYPES.LOGISTICS }
+      { text: '哪些事情最影响业务结果，哪些资源投入最不划算', type: TYPES.PROCUREMENT },
+      { text: '先跟着一件真实业务跑完，看它实际是怎么转起来的', type: TYPES.MANUFACTURE },
+      { text: '关键数据、系统口径和报表入口分别在哪里', type: TYPES.DATA },
+      { text: '谁和谁协作、谁拍板、问题通常卡在哪一层', type: TYPES.PROJECT }
     ]
   },
   {
     id: 2,
-    text: '日常工作中，你更容易主动关注哪类信息？',
+    text: '拿到一份供应链月报，你第一眼会看什么？',
     options: [
-      { text: '需求、库存、产能三者有没有出现失衡的信号', type: TYPES.PLANNER },
-      { text: '市场上有没有更好的资源条件或供应替代方案', type: TYPES.PROCUREMENT },
-      { text: '生产现场的效率、质量或操作是否有可以改进的地方', type: TYPES.MANUFACTURE },
-      { text: '各项目进展有没有延误，各方有没有对齐在同一节奏上', type: TYPES.PROJECT }
+      { text: '成本、库存或损耗有没有异常，和上期相比变化大不大', type: TYPES.PROCUREMENT, subtype: TYPES.DATA },
+      { text: '订单、库存、运输这些关键节点有没有卡住', type: TYPES.LOGISTICS },
+      { text: '哪些指标偏离正常范围，背后可能是什么原因', type: TYPES.DATA },
+      { text: '跨部门承诺有没有兑现，哪些事项还没闭环', type: TYPES.PROJECT }
     ]
   },
   {
     id: 3,
-    text: '面对一个跨部门的复杂问题，你的切入点是？',
+    text: '跨部门项目推进卡住了，你的第一反应是？',
     options: [
-      { text: '先把整体逻辑和时间节点梳理清楚，找到核心约束', type: TYPES.PLANNER },
-      { text: '跟着货物或信息的流动路径走一遍，找出哪个节点卡住了', type: TYPES.LOGISTICS },
-      { text: '到现场看，先搞清楚实际操作是怎么运转的', type: TYPES.MANUFACTURE },
-      { text: '梳理各方目标和诉求，找到推进共识的路径', type: TYPES.PROJECT }
+      { text: '先判断这个卡点值不值得继续耗，能不能换资源或换路径', type: TYPES.PROCUREMENT },
+      { text: '顺着流程往前追，看是哪一段交接没有说清楚', type: TYPES.LOGISTICS },
+      { text: '去现场看一遍，确认流程设计和实际操作差在哪', type: TYPES.MANUFACTURE },
+      { text: '把相关人拉齐，先把各自的卡点和责任边界说清楚', type: TYPES.PROJECT }
     ]
   },
   {
     id: 4,
-    text: '收到一个模糊的业务需求，你的第一步是？',
+    text: '一个操作步骤最近频繁出错，你最先做什么？',
     options: [
-      { text: '先评估外部能不能满足这个需求，以及需要什么条件', type: TYPES.PROCUREMENT },
-      { text: '先判断这个需求对现有流转和仓储运作有什么影响', type: TYPES.LOGISTICS },
-      { text: '先找数据，把需求的实际规模和优先级说清楚', type: TYPES.DATA },
-      { text: '先和提需求的人对齐目标，确认优先级和可接受的边界', type: TYPES.PROJECT }
+      { text: '先判断这个错误会带来多大损失，值不值得立刻改规则', type: TYPES.PROCUREMENT },
+      { text: '把流程从头走一遍，看是哪一步交接或输入不清楚', type: TYPES.LOGISTICS },
+      { text: '到现场看实际怎么操作，和标准动作差在哪里', type: TYPES.MANUFACTURE },
+      { text: '统计出错频率、时间段和人员分布，看有没有规律', type: TYPES.DATA }
     ]
   },
   {
     id: 5,
-    text: '需要在几种方案中做决策，但信息不完整。你会？',
+    text: '老板说明年要提效降本，你的第一个念头是？',
     options: [
-      { text: '评估各方案对供需节奏的影响，找出约束最少的路径', type: TYPES.PLANNER },
-      { text: '从执行可行性出发，判断哪个方案现场能跑通', type: TYPES.MANUFACTURE },
-      { text: '用现有数据快速分析，缩小不确定性再决策', type: TYPES.DATA },
-      { text: '召集相关人，把每种方案的风险和收益对齐一遍再拍板', type: TYPES.PROJECT }
+      { text: '先拆目标和时间轴，看每个阶段该推进什么', type: TYPES.PLANNER },
+      { text: '先去一线盘一圈，把明显浪费和低效点找出来', type: TYPES.MANUFACTURE },
+      { text: '先做一张成本和效率分布图，看问题集中在哪', type: TYPES.DATA, subtype: TYPES.PROCUREMENT },
+      { text: '先和各部门对齐，确认哪些动作真的能推动落地', type: TYPES.PROJECT }
     ]
   },
   {
     id: 6,
-    text: '参与一个供应链降本项目，你最自然的切入点是？',
+    text: '核心供应商通知断货三周，你的第一步是？',
     options: [
-      { text: '先看外部资源有没有更优的选择，或者现有条件能不能优化', type: TYPES.PROCUREMENT },
-      { text: '优化货物流转路线或作业频次，减少不必要的流转成本', type: TYPES.LOGISTICS },
-      { text: '分析现场操作，找出物料损耗或无效工序的根源', type: TYPES.MANUFACTURE },
-      { text: '先建成本分析模型，找出单位成本最高的环节在哪里', type: TYPES.DATA }
+      { text: '先推演未来三周生产和交付会从哪一天开始受影响', type: TYPES.PLANNER },
+      { text: '先查在途、库存、替代仓和调拨路径能不能接上', type: TYPES.LOGISTICS },
+      { text: '把消耗速度、历史备货和库存水位拉出来，算还能撑多久', type: TYPES.DATA },
+      { text: '马上拉采购、计划、生产一起对齐风险和决策动作', type: TYPES.PROJECT }
     ]
   },
   {
     id: 7,
-    text: '老板说明年要"提升效率、控制成本"。你最先想到的是？',
+    text: '生产线临时停机，今天的发货可能完不成，你先做什么？',
     options: [
-      { text: '优化供需平衡策略，减少过量备货和紧急补货带来的浪费', type: TYPES.PLANNER },
-      { text: '重新审视资源结构，看有没有更优的替代方案或合作条件', type: TYPES.PROCUREMENT },
-      { text: '先对效率和成本数据做一次全面分析，找出最大的优化空间', type: TYPES.DATA },
-      { text: '把改善目标拆解成项目，拉各部门共同制定行动计划', type: TYPES.PROJECT }
+      { text: '先看已完工、在制和待发订单，重新排保供优先级', type: TYPES.PLANNER },
+      { text: '先协调仓库和运输，保证最急的订单能先发出去', type: TYPES.LOGISTICS },
+      { text: '去现场判断停机原因和最快恢复时间', type: TYPES.MANUFACTURE },
+      { text: '同步相关方影响范围，决定要不要提前通知客户', type: TYPES.PROJECT }
     ]
   },
   {
     id: 8,
-    text: '生产线突然停机，今天发货目标可能完不成，你先做什么？',
+    text: '月末复盘，一个关键指标没达成，你最想搞清楚什么？',
     options: [
-      { text: '协调运力和仓库，看能不能用备用方案保住最紧急的订单', type: TYPES.LOGISTICS },
-      { text: '到现场了解停机原因，判断能最快恢复的时间节点', type: TYPES.MANUFACTURE },
-      { text: '查系统，评估已完工的货物能覆盖哪些订单', type: TYPES.DATA },
-      { text: '快速拉相关方对齐影响范围，决定是否需要对客户预警', type: TYPES.PROJECT }
+      { text: '计划是从哪个节点开始偏离目标的', type: TYPES.PLANNER },
+      { text: '哪个流转节点、交接环节或履约动作拖慢了结果', type: TYPES.LOGISTICS },
+      { text: '现场执行有没有出现异常，是否影响了实际产出', type: TYPES.MANUFACTURE },
+      { text: '数据上有没有早期信号，当时为什么没被识别出来', type: TYPES.DATA }
     ]
   },
   {
     id: 9,
-    text: '核心物料供应商通知断货三周，你的应对思路是？',
+    text: '公司要上一个新系统，你被拉进项目组，你最先关注什么？',
     options: [
-      { text: '重新计算未来三周的生产计划，评估影响范围，重排优先级', type: TYPES.PLANNER },
-      { text: '立刻联系备用资源，评估能否快速切换或紧急补货', type: TYPES.PROCUREMENT },
-      { text: '调查在途库存和其他仓库是否有调拨可能', type: TYPES.LOGISTICS },
-      { text: '到工厂了解实际缺料影响，看能否调整生产顺序减少损失', type: TYPES.MANUFACTURE }
+      { text: '上线时间、试点节奏和各阶段里程碑怎么排', type: TYPES.PLANNER },
+      { text: '供应商、预算、接口采购和后续维护成本是否可控', type: TYPES.PROCUREMENT },
+      { text: '先选一个真实业务场景试跑，看看系统能不能跑通', type: TYPES.MANUFACTURE },
+      { text: '推进卡在哪、谁能拍板、哪些部门必须配合', type: TYPES.PROJECT }
     ]
   },
   {
     id: 10,
-    text: '跨部门项目推进总是在对齐上卡壳，你的做法是？',
+    text: '你发现某个流程在执行层面和设计层面完全脱节，你会怎么做？',
     options: [
-      { text: '把整体计划和各节点依赖关系画清楚，让大家看到卡在哪', type: TYPES.PLANNER },
-      { text: '从执行层面切入，先把能落地的部分推动起来', type: TYPES.LOGISTICS },
-      { text: '用数据说明当前的卡点带来了多大的业务影响', type: TYPES.DATA },
-      { text: '建立固定对齐机制，让推进节奏固定下来', type: TYPES.PROJECT }
+      { text: '先画出现有流程和理想流程，找出差异发生在哪几个节点', type: TYPES.PLANNER },
+      { text: '先判断这个脱节到底影响成本、效率还是风险，值不值得改', type: TYPES.PROCUREMENT },
+      { text: '先到执行现场跑一遍，验证真正卡人的地方在哪里', type: TYPES.MANUFACTURE },
+      { text: '把差异造成的异常次数、耗时和损失量化出来', type: TYPES.DATA }
     ]
   },
   {
     id: 11,
-    text: '公司推一个改善项目，但大家都很忙，参与度低。你会？',
+    text: '参与一个降本项目，大家参与度很低，你会怎么推？',
     options: [
-      { text: '把改善对成本节省的潜力量化出来，让利益可见', type: TYPES.PROCUREMENT },
-      { text: '从一线操作出发，先解决一个具体问题让人看到变化', type: TYPES.MANUFACTURE },
-      { text: '用数据说明现在的问题有多严重，制造改变的紧迫感', type: TYPES.DATA },
-      { text: '把项目正式立项，明确责任人和里程碑，让推进有依据', type: TYPES.PROJECT }
+      { text: '先把项目节奏和关键交付节点定清楚', type: TYPES.PLANNER },
+      { text: '把能省多少钱、影响什么指标算出来，让价值可见', type: TYPES.PROCUREMENT },
+      { text: '先把执行动作拆成清单，让每个部门知道具体要交什么', type: TYPES.LOGISTICS },
+      { text: '把项目正式立项，定责任人、里程碑和复盘机制', type: TYPES.PROJECT }
     ]
   },
   {
     id: 12,
-    text: '某个操作流程里有个步骤频繁出错。你会？',
+    text: '公司要做一个战略项目，你被拉进来，你最自然会先从哪里切入？',
     options: [
-      { text: '分析这个错误对下游计划和交付的影响，评估改善优先级', type: TYPES.PLANNER },
-      { text: '看这个步骤有没有涉及外部资源，从源头能否解决', type: TYPES.PROCUREMENT },
-      { text: '重新梳理这个步骤的操作规范，设计防错机制', type: TYPES.LOGISTICS },
-      { text: '召集相关人把根因找出来，制定改善方案并推动落地', type: TYPES.PROJECT }
-    ]
-  },
-  {
-    id: 13,
-    text: '月末复盘，一个关键指标没达成，你最想搞清楚什么？',
-    options: [
-      { text: '计划在哪个环节出了偏差，预测和实际为什么差这么多', type: TYPES.PLANNER },
-      { text: '外部配合侧有没有问题，有没有影响最终结果', type: TYPES.PROCUREMENT },
-      { text: '现场执行哪里出了问题，是操作失误还是流程本身有缺陷', type: TYPES.MANUFACTURE },
-      { text: '数据上有没有早期预警信号，当时为什么没有被发现和响应', type: TYPES.DATA }
-    ]
-  },
-  {
-    id: 14,
-    text: '公司要推一个战略项目，你被要求参与。你最自然承担的角色是？',
-    options: [
-      { text: '把项目对供需端的影响评估清楚，确保计划层面可行', type: TYPES.PLANNER },
-      { text: '负责物流和仓储的配套落地，保证实物端能跟上', type: TYPES.LOGISTICS },
-      { text: '负责工厂/产线侧的配合，确保生产端能执行', type: TYPES.MANUFACTURE },
-      { text: '主导整个项目的推进，把各方资源和节点协调到位', type: TYPES.PROJECT }
-    ]
-  },
-  {
-    id: 15,
-    text: '公司要提升供应链响应速度，你的切入点是？',
-    options: [
-      { text: '建立更灵活的资源合作机制，缩短关键物料的响应周期', type: TYPES.PROCUREMENT },
-      { text: '优化仓储布局和物流节点，减少货物实际流动时间', type: TYPES.LOGISTICS },
-      { text: '精简现场换线和物料准备流程，提升产线响应能力', type: TYPES.MANUFACTURE },
-      { text: '建立预警和监控机制，让问题在恶化之前被发现并处理', type: TYPES.DATA }
+      { text: '把目标拆成阶段路径，明确每个阶段的关键节点和风险', type: TYPES.PLANNER },
+      { text: '判断项目背后的投入产出、资源约束和商业优先级', type: TYPES.PROCUREMENT },
+      { text: '梳理从需求到交付的执行链路，确认哪些环节需要配套落地', type: TYPES.LOGISTICS },
+      { text: '搭一套数据分析框架，用数据支撑方向和决策', type: TYPES.DATA }
     ]
   }
 ];

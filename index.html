@@ -99,7 +99,7 @@
             <div class="identity-info">
               <div class="identity-label">应届生 / 实习中</div>
               <div class="identity-desc">在校生 · 即将毕业 · 还没有全职供应链经验</div>
-              <div class="identity-meta">12题 · 约3分钟</div>
+              <div class="identity-meta">12题 · 约10分钟</div>
             </div>
             <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
@@ -110,7 +110,7 @@
             <div class="identity-info">
               <div class="identity-label">已工作 · 想换方向</div>
               <div class="identity-desc">有1-3年经验 · 不确定下一步该往哪走</div>
-              <div class="identity-meta">15题 · 约4分钟</div>
+              <div class="identity-meta">12题 · 约15分钟</div>
             </div>
             <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
@@ -133,11 +133,23 @@
       <div class="question-dimension" id="question-dimension"></div>
       <h2 class="question-text" id="question-text">题目加载中...</h2>
       <div class="options-list" id="options-list"></div>
+      <div class="quiz-nav">
+        <button id="btn-prev" class="btn-prev" onclick="prevQuestion()" style="display:none;">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          上一题
+        </button>
+      </div>
     </div>
   </div>
 
   <!-- ==================== 结果页 ==================== -->
   <div id="page-result" class="page">
+
+    <!-- 查看他人结果时的返回栏 -->
+    <div id="result-viewing-bar" class="result-viewing-bar" style="display:none;">
+      <button class="viewing-back-btn" onclick="backToOwnResult()">← 我的结果</button>
+      <span id="viewing-bar-type"></span>
+    </div>
 
     <!-- 结果头部 -->
     <div id="result-header" class="result-header">
@@ -228,6 +240,16 @@
         <p class="card-text" id="result-advice"></p>
       </div>
 
+      <!-- 探索其他类型 -->
+      <div class="result-card result-card--explore">
+        <div class="card-header">
+          <span class="card-icon-badge card-icon-badge--explore">6</span>
+          <h3 class="card-title">探索全部类型</h3>
+        </div>
+        <p class="explore-hint">点击查看每种类型的完整分析和插图</p>
+        <div class="explore-grid" id="explore-grid"></div>
+      </div>
+
       <!-- 分享区 -->
       <div class="result-share">
         <div class="share-inner">
@@ -235,7 +257,8 @@
           <p class="share-sub">看看你是哪种供应链人格 👆</p>
         </div>
         <div class="share-cta-row">
-          <p class="share-cta">不知道怎么投简历？带着这个结果来找我 →</p>
+          <p class="share-cta">对结果想进一步探讨，欢迎带着结果来找我 →</p>
+          <a class="share-cta-link" href="https://xhslink.com/m/8VBWpXIrnSA" target="_blank">设计者主页</a>
         </div>
       </div>
 

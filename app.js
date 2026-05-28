@@ -9,6 +9,8 @@ let currentQuestion = 0;
 let scores = [0, 0, 0, 0, 0, 0];
 let activeQuestions = [];
 let radarChart = null;
+let answerHistory = [];
+let ownResultIndex = null; // tracks user's actual result for explore mode
 
 // ==================== 雷达图维度权重矩阵 ====================
 // 每种类型（PLANNER=0, PROCUREMENT=1, LOGISTICS=2, MANUFACTURE=3, DATA=4, PROJECT=5）
@@ -55,6 +57,7 @@ function selectIdentity(identity) {
 function startQuiz() {
   currentQuestion = 0;
   scores = [0, 0, 0, 0, 0, 0];
+  answerHistory = [];
   activeQuestions = userIdentity === 'fresh' ? QUESTIONS_FRESH : QUESTIONS_CAREER;
   renderQuestion();
   showPage('page-quiz');
@@ -69,28 +72,49 @@ function renderQuestion() {
   document.getElementById('progress-fill').style.width = (currentQuestion / total * 100) + '%';
   document.getElementById('question-text').textContent = q.text;
 
+  const prevBtn = document.getElementById('btn-prev');
+  if (prevBtn) prevBtn.style.display = currentQuestion > 0 ? 'flex' : 'none';
+
   const list = document.getElementById('options-list');
   list.innerHTML = '';
+  const prevAnswer = answerHistory[currentQuestion];
   q.options.forEach((opt, i) => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
+    if (prevAnswer !== undefined && prevAnswer.type === opt.type) btn.classList.add('selected');
     btn.innerHTML = `
       <span class="option-letter">${String.fromCharCode(65 + i)}</span>
       <span class="option-text">${opt.text}</span>
     `;
-    btn.addEventListener('click', () => selectOption(opt.type, btn));
+    btn.addEventListener('click', () => selectOption(opt, btn));
     list.appendChild(btn);
   });
 }
 
-function selectOption(typeIndex, clickedBtn) {
-  if (clickedBtn.classList.contains('selected')) return;
+function prevQuestion() {
+  if (currentQuestion <= 0) return;
+  currentQuestion--;
+  renderQuestion();
+}
+
+function selectOption(opt, clickedBtn) {
+  // Undo previous answer for this question if user is revising
+  const prev = answerHistory[currentQuestion];
+  if (prev !== undefined) {
+    scores[prev.type] -= 2;
+    if (prev.subtype !== undefined) scores[prev.subtype] -= 1;
+  }
+
   document.querySelectorAll('.option-btn').forEach(btn => {
     btn.classList.remove('selected');
     btn.disabled = true;
   });
   clickedBtn.classList.add('selected');
-  scores[typeIndex] += 1;
+
+  scores[opt.type] += 2;
+  if (opt.subtype !== undefined) scores[opt.subtype] += 1;
+  answerHistory[currentQuestion] = opt;
+
   setTimeout(() => {
     currentQuestion++;
     currentQuestion < activeQuestions.length ? renderQuestion() : showResult();
@@ -122,19 +146,32 @@ function calcDimensionScores() {
 
 // ==================== 结果展示 ====================
 
-function showResult() {
+function showResult(forceIndex) {
   const maxScore = Math.max(...scores);
-  const resultIndex = scores.indexOf(maxScore);
+  const actualIndex = scores.indexOf(maxScore);
+
+  if (forceIndex === undefined) ownResultIndex = actualIndex;
+
+  const resultIndex = (forceIndex !== undefined) ? forceIndex : actualIndex;
   const result = RESULTS[resultIndex];
 
-  // 找第二名
+  // 找第二名（始终基于真实分数）
   const scoresCopy = [...scores];
-  scoresCopy[resultIndex] = -1;
+  scoresCopy[actualIndex] = -1;
   const secondIndex = scoresCopy.indexOf(Math.max(...scoresCopy));
   const secondResult = RESULTS[secondIndex];
 
+  // 顶部返回栏
+  const viewingBar = document.getElementById('result-viewing-bar');
+  const viewingBarType = document.getElementById('viewing-bar-type');
+  if (forceIndex !== undefined && forceIndex !== ownResultIndex) {
+    viewingBar.style.display = 'flex';
+    viewingBarType.textContent = result.name;
+  } else {
+    viewingBar.style.display = 'none';
+  }
+
   // 头部
-  document.getElementById('result-header').style.backgroundColor = '';
   document.documentElement.style.setProperty('--theme', result.color);
   document.documentElement.style.setProperty('--theme-light', result.lightColor);
 
@@ -142,7 +179,7 @@ function showResult() {
   document.getElementById('result-english-name').textContent = result.englishName;
   document.getElementById('result-tagline').textContent = result.tagline;
 
-  // 人物插图（有 avatar 字段的类型才显示）
+  // 人物插图
   const avatarCard = document.getElementById('result-avatar-card');
   const avatarEl = document.getElementById('result-avatar');
   if (result.avatar) {
@@ -180,19 +217,40 @@ function showResult() {
     adviceEl.textContent = result.advice.career;
   }
 
-  // advice卡片边框色
   const adviceCard = document.querySelector('.result-card--advice');
   if (adviceCard) adviceCard.style.borderColor = result.color;
 
-  showPage('page-result');
+  // 探索网格
+  renderExploreGrid(resultIndex);
 
-  // 延迟渲染雷达图（等DOM进入视口）
-  setTimeout(() => renderRadar(result.color), 150);
+  showPage('page-result');
+  setTimeout(() => renderRadar(result.color, resultIndex), 150);
+}
+
+function backToOwnResult() {
+  if (ownResultIndex !== null) showResult();
+}
+
+function renderExploreGrid(activeIndex) {
+  const grid = document.getElementById('explore-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  RESULTS.forEach((r, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'explore-card' + (i === activeIndex ? ' active' : '') + (i === ownResultIndex ? ' own' : '');
+    btn.style.cssText = `--ec:${r.color};--el:${r.lightColor}`;
+    btn.innerHTML = `<span class="explore-name">${r.name}</span><span class="explore-en">${r.englishName.split('/')[0].trim()}</span>`;
+    if (i === ownResultIndex && i !== activeIndex) {
+      btn.innerHTML += `<span class="explore-own-tag">我的</span>`;
+    }
+    btn.addEventListener('click', () => showResult(i));
+    grid.appendChild(btn);
+  });
 }
 
 // ==================== ECharts 雷达图 ====================
 
-function renderRadar(themeColor) {
+function renderRadar(themeColor, viewIndex) {
   const el = document.getElementById('radar-chart');
   if (!el) return;
 
@@ -202,7 +260,16 @@ function renderRadar(themeColor) {
   }
 
   radarChart = echarts.init(el, null, { renderer: 'svg' });
-  const dimScores = calcDimensionScores();
+
+  let dimScores;
+  if (viewIndex !== undefined && viewIndex !== ownResultIndex) {
+    // 查看他人类型时：显示该类型的纯维度特征
+    const w = DIMENSION_WEIGHTS[viewIndex];
+    const max = Math.max(...w);
+    dimScores = w.map(v => max > 0 ? Math.round((v / max) * 70 + 20) : 30);
+  } else {
+    dimScores = calcDimensionScores();
+  }
 
   const option = {
     backgroundColor: 'transparent',
@@ -268,6 +335,7 @@ function restartQuiz() {
   currentQuestion = 0;
   scores = [0, 0, 0, 0, 0, 0];
   activeQuestions = [];
+  ownResultIndex = null;
   if (radarChart) { radarChart.dispose(); radarChart = null; }
   showPage('page-welcome');
 }
