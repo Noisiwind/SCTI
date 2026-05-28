@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>SCTI · 供应链岗位适配测试</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+  <!-- ==================== 欢迎页 ==================== -->
+  <div id="page-welcome" class="page active">
+
+    <!-- 顶部品牌栏 -->
+    <div class="welcome-topbar">
+      <div class="welcome-brand">
+        <div class="welcome-brand-icon">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M2 14 L6 8 L10 11 L14 4 L16 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="16" cy="4" r="1.5" fill="currentColor"/>
+            <path d="M2 16 L16 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.4"/>
+          </svg>
+        </div>
+        <span class="welcome-brand-name">SCTI <span class="welcome-brand-full">Supply Chain Type Indicator</span></span>
+      </div>
+    </div>
+
+    <!-- 中央内容 -->
+    <div class="welcome-center">
+      <div class="welcome-badge">供应链职业方向测试</div>
+
+      <h1 class="welcome-title">找准你的<br/>供应链赛道</h1>
+
+      <p class="welcome-sub">基于6大职业维度<br/>3分钟测出你真正适合哪个方向</p>
+
+      <div class="welcome-tags-grid">
+        <span>📊 计划</span>
+        <span>🎯 采购</span>
+        <span>🚚 物流</span>
+        <span>🏭 制造</span>
+        <span>📈 数据</span>
+        <span>🚀 项目</span>
+      </div>
+
+      <button class="btn-start" onclick="goToIdentity()">
+        立即开始测试 →
+      </button>
+
+    </div>
+  </div>
+
+  <!-- ==================== 性别选择页 ==================== -->
+  <div id="page-gender" class="page">
+    <div class="page-inner">
+      <div class="step-header">
+        <p class="step-eyebrow">01 / 开始之前</p>
+        <h2 class="step-title">你是</h2>
+        <p class="step-desc">会影响结果页的人物形象</p>
+      </div>
+      <div class="identity-cards">
+        <button class="identity-card gender-card" onclick="selectGender('male')">
+          <div class="identity-card-inner">
+            <div class="gender-icon gender-icon--male">♂</div>
+            <div class="identity-info">
+              <div class="identity-label">男生</div>
+            </div>
+            <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </button>
+        <button class="identity-card gender-card" onclick="selectGender('female')">
+          <div class="identity-card-inner">
+            <div class="gender-icon gender-icon--female">♀</div>
+            <div class="identity-info">
+              <div class="identity-label">女生</div>
+            </div>
+            <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 身份选择页 ==================== -->
+  <div id="page-identity" class="page">
+    <div class="page-inner">
+      <div class="step-header">
+        <p class="step-eyebrow">02 / 开始之前</p>
+        <h2 class="step-title">你现在<br/>是哪种状态？</h2>
+        <p class="step-desc">不同的起点，给你不同的题目和建议</p>
+      </div>
+      <div class="identity-cards">
+        <button class="identity-card" onclick="selectIdentity('fresh')">
+          <div class="identity-card-inner">
+            <div class="identity-num">A</div>
+            <div class="identity-info">
+              <div class="identity-label">应届生 / 实习中</div>
+              <div class="identity-desc">在校生 · 即将毕业 · 还没有全职供应链经验</div>
+              <div class="identity-meta">12题 · 约3分钟</div>
+            </div>
+            <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </button>
+        <button class="identity-card" onclick="selectIdentity('career')">
+          <div class="identity-card-inner">
+            <div class="identity-num">B</div>
+            <div class="identity-info">
+              <div class="identity-label">已工作 · 想换方向</div>
+              <div class="identity-desc">有1-3年经验 · 不确定下一步该往哪走</div>
+              <div class="identity-meta">15题 · 约4分钟</div>
+            </div>
+            <svg class="identity-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 答题页 ==================== -->
+  <div id="page-quiz" class="page">
+    <div class="quiz-header">
+      <div class="quiz-progress-track">
+        <div id="progress-fill" class="quiz-progress-fill" style="width:0%"></div>
+      </div>
+      <div class="quiz-progress-info">
+        <span class="quiz-q-num"><span id="progress-current">1</span><span class="quiz-q-sep">/</span><span id="progress-total">15</span></span>
+      </div>
+    </div>
+    <div class="quiz-body">
+      <div class="question-dimension" id="question-dimension"></div>
+      <h2 class="question-text" id="question-text">题目加载中...</h2>
+      <div class="options-list" id="options-list"></div>
+    </div>
+  </div>
+
+  <!-- ==================== 结果页 ==================== -->
+  <div id="page-result" class="page">
+
+    <!-- 结果头部 -->
+    <div id="result-header" class="result-header">
+      <div class="result-header-inner">
+        <!-- 顶部 badges -->
+        <div class="result-label-row">
+          <span class="result-pre-label">你是</span>
+          <span class="result-second-badge" id="result-second-badge"></span>
+        </div>
+
+        <!-- emoji + 大标题 + 英文名 -->
+        <h1 class="result-type-name" id="result-type-name">计划大脑型</h1>
+        <p class="result-english-name" id="result-english-name">Supply Chain Planner</p>
+
+        <!-- 插图卡片（仅有图片的类型显示） -->
+        <div class="result-avatar-card" id="result-avatar-card" style="display:none;">
+          <img id="result-avatar" class="result-avatar" src="" alt="" />
+        </div>
+
+        <!-- tagline 引言 -->
+        <div class="result-tagline-wrap">
+          <span class="result-tagline-quote">"</span>
+          <p class="result-tagline" id="result-tagline">你不是冷漠，你只是更相信数据。</p>
+          <span class="result-tagline-quote result-tagline-quote--close">"</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-body">
+
+      <!-- 雷达图 -->
+      <div class="result-card result-card--radar">
+        <h3 class="card-title">能力维度分析</h3>
+        <div id="radar-chart" style="width:100%;height:260px;"></div>
+      </div>
+
+      <!-- 关于你 -->
+      <div class="result-card">
+        <div class="card-header">
+          <span class="card-icon-badge">01</span>
+          <h3 class="card-title">关于你</h3>
+        </div>
+        <p class="card-text" id="result-description"></p>
+      </div>
+
+      <!-- 适合岗位 -->
+      <div class="result-card">
+        <div class="card-header">
+          <span class="card-icon-badge">02</span>
+          <h3 class="card-title">适合岗位</h3>
+        </div>
+        <div class="tag-list" id="result-positions"></div>
+      </div>
+
+      <!-- 核心优势 -->
+      <div class="result-card">
+        <div class="card-header">
+          <span class="card-icon-badge">03</span>
+          <h3 class="card-title">核心优势</h3>
+        </div>
+        <ul class="strengths-list" id="result-strengths"></ul>
+      </div>
+
+      <!-- 求职风险 -->
+      <div class="result-card result-card--warning">
+        <div class="card-header">
+          <span class="card-icon-badge card-icon-badge--warn">!</span>
+          <h3 class="card-title">一个需要注意的风险</h3>
+        </div>
+        <p class="card-text" id="result-risk"></p>
+      </div>
+
+      <!-- 简历关键词 -->
+      <div class="result-card">
+        <div class="card-header">
+          <span class="card-icon-badge">04</span>
+          <h3 class="card-title">简历关键词</h3>
+        </div>
+        <div class="keyword-list" id="result-keywords"></div>
+      </div>
+
+      <!-- 求职建议 -->
+      <div class="result-card result-card--advice">
+        <div class="card-header">
+          <span class="card-icon-badge card-icon-badge--accent">→</span>
+          <h3 class="card-title" id="advice-title">给你的建议</h3>
+        </div>
+        <p class="card-text" id="result-advice"></p>
+      </div>
+
+      <!-- 分享区 -->
+      <div class="result-share">
+        <div class="share-inner">
+          <p class="share-main">截图发小红书</p>
+          <p class="share-sub">看看你是哪种供应链人格 👆</p>
+        </div>
+        <div class="share-cta-row">
+          <p class="share-cta">不知道怎么投简历？带着这个结果来找我 →</p>
+        </div>
+      </div>
+
+      <div class="result-actions">
+        <button class="btn-restart" onclick="restartQuiz()">重新测试</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+
+  <!-- 设计者预览入口（仅开发用） -->
+  <div id="dev-panel" style="display:none;">
+    <button onclick="toggleDevPanel()" style="background:#1a2340;color:#fff;border:none;border-radius:20px;padding:6px 14px;font-size:12px;cursor:pointer;opacity:0.7;">🎨 预览</button>
+    <div id="dev-links" style="display:none;background:#fff;border:1px solid #e0e0e0;border-radius:12px;padding:10px;box-shadow:0 4px 20px rgba(0,0,0,0.12);min-width:160px;">
+      <p style="font-size:10px;color:#999;margin:0 0 8px;font-family:sans-serif;">选性别 + 结果类型</p>
+      <div style="display:flex;gap:6px;margin-bottom:8px;">
+        <button onclick="devSetGender('male')" id="dev-male" style="flex:1;padding:4px;font-size:11px;border:1px solid #ddd;border-radius:6px;cursor:pointer;background:#f5f5f5;">男</button>
+        <button onclick="devSetGender('female')" id="dev-female" style="flex:1;padding:4px;font-size:11px;border:1px solid #ddd;border-radius:6px;cursor:pointer;background:#f5f5f5;">女</button>
+      </div>
+      <div id="dev-type-btns" style="display:flex;flex-direction:column;gap:4px;"></div>
+    </div>
+  </div>
+  <script>
+    var devGender = 'male';
+    function toggleDevPanel() {
+      var p = document.getElementById('dev-links');
+      if (p.style.display === 'none') {
+        p.style.display = 'block';
+        if (!document.getElementById('dev-type-btns').children.length) buildDevBtns();
+      } else {
+        p.style.display = 'none';
+      }
+    }
+    function buildDevBtns() {
+      var container = document.getElementById('dev-type-btns');
+      RESULTS.forEach(function(r, i) {
+        var btn = document.createElement('button');
+        btn.textContent = r.name;
+        btn.style.cssText = 'padding:5px 8px;font-size:11px;border:1px solid #ddd;border-radius:6px;cursor:pointer;background:#f9f9f9;text-align:left;';
+        btn.onclick = function() { devPreview(i); };
+        container.appendChild(btn);
+      });
+    }
+    function devSetGender(g) {
+      devGender = g;
+      document.getElementById('dev-male').style.background = g === 'male' ? '#1a2340' : '#f5f5f5';
+      document.getElementById('dev-male').style.color = g === 'male' ? '#fff' : '#333';
+      document.getElementById('dev-female').style.background = g === 'female' ? '#1a2340' : '#f5f5f5';
+      document.getElementById('dev-female').style.color = g === 'female' ? '#fff' : '#333';
+    }
+    function devPreview(typeIndex) {
+      userGender = devGender;
+      userIdentity = 'fresh';
+      scores = [0, 0, 0, 0, 0, 0];
+      scores[typeIndex] = 5;
+      activeQuestions = QUESTIONS_FRESH;
+      showResult();
+      document.getElementById('dev-links').style.display = 'none';
+    }
+  </script>
+</div>
+</body>
+</html>
