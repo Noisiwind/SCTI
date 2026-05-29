@@ -958,7 +958,191 @@ html, body {
 }
 .btn-restart:hover { border-color: var(--ink-2); color: var(--ink); }
 
-/* ========== 滚动条 ========== */
+/* ========== 生成分享卡按钮 ========== */
+.btn-share-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  background: var(--ink);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Noto Sans SC', 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s;
+  letter-spacing: 0.5px;
+}
+.btn-share-card::before {
+  content: '';
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2'%3E%3Crect x='3' y='3' width='18' height='18' rx='2'/%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Ccircle cx='17.5' cy='6.5' r='1.5' fill='%23fff'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.btn-share-card:hover { opacity: 0.85; }
+.btn-share-card:active { transform: scale(0.98); }
+
+/* ========== 分享卡遮罩 ========== */
+.share-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  gap: 14px;
+}
+
+.share-overlay-tip {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  font-family: 'DM Sans', sans-serif;
+  text-align: center;
+}
+
+/* ========== 分享卡本体 ========== */
+.share-card {
+  width: 100%;
+  max-width: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+}
+
+/* 顶部彩色区域 */
+.sc-top {
+  padding: 20px 20px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 220px;
+  position: relative;
+}
+
+.sc-brand {
+  align-self: flex-start;
+  font-size: 10px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-family: 'DM Sans', sans-serif;
+  margin-bottom: 12px;
+}
+
+.sc-avatar {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  display: block;
+  flex-shrink: 0;
+}
+
+.sc-type-block {
+  width: 100%;
+  padding: 14px 0 18px;
+  text-align: center;
+}
+
+.sc-name {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+.sc-en {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* 底部白色区域 */
+.sc-bottom {
+  padding: 18px 20px 16px;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sc-quote-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.sc-qmark {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--theme, #4F6EF7);
+  opacity: 0.3;
+  flex-shrink: 0;
+  margin-top: -2px;
+}
+
+.sc-qmark--r {
+  align-self: flex-end;
+  margin-top: 0;
+  margin-bottom: -2px;
+}
+
+.sc-tagline {
+  font-family: 'Noto Serif SC', serif;
+  font-size: 13px;
+  line-height: 1.75;
+  color: #3a4560;
+  flex: 1;
+}
+
+.sc-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sc-kw {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  font-family: 'DM Mono', 'Consolas', monospace;
+  letter-spacing: 0.3px;
+}
+
+.sc-secondary {
+  font-size: 11px;
+  color: var(--ink-4);
+  font-family: 'Noto Sans SC', sans-serif;
+  line-height: 1.5;
+}
+
+.sc-footer {
+  font-size: 10px;
+  color: var(--ink-4);
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.5px;
+  text-align: center;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }

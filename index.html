@@ -240,6 +240,9 @@
         <p class="card-text" id="result-advice"></p>
       </div>
 
+      <!-- 生成分享卡按钮 -->
+      <button class="btn-share-card" onclick="showShareCard()">生成我的分享卡</button>
+
       <!-- 探索其他类型 -->
       <div class="result-card result-card--explore">
         <div class="card-header">
@@ -271,6 +274,36 @@
 
   <script src="data.js"></script>
   <script src="app.js"></script>
+
+  <!-- ==================== 分享卡遮罩 ==================== -->
+  <div id="share-overlay" class="share-overlay" style="display:none;" onclick="closeShareCard(event)">
+    <div class="share-card" id="share-card">
+
+      <!-- 顶部彩色区域 -->
+      <div class="sc-top" id="sc-top">
+        <div class="sc-brand">SCTI · 供应链岗位适配测试</div>
+        <img id="sc-avatar" class="sc-avatar" src="" alt="" />
+        <div class="sc-type-block">
+          <h2 class="sc-name" id="sc-name"></h2>
+          <p class="sc-en" id="sc-en"></p>
+        </div>
+      </div>
+
+      <!-- 底部白色区域 -->
+      <div class="sc-bottom">
+        <div class="sc-quote-wrap">
+          <span class="sc-qmark">"</span>
+          <p class="sc-tagline" id="sc-tagline"></p>
+          <span class="sc-qmark sc-qmark--r">"</span>
+        </div>
+        <div class="sc-keywords" id="sc-keywords"></div>
+        <p class="sc-secondary" id="sc-secondary"></p>
+        <div class="sc-footer">SCTI · noisiwind.github.io/SCTI</div>
+      </div>
+
+    </div>
+    <p class="share-overlay-tip">截图保存 · 点击空白处关闭</p>
+  </div>
 
   <!-- 设计者预览入口（仅开发用） -->
   <div id="dev-panel" style="display:none;">

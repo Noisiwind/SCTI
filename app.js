@@ -10,7 +10,8 @@ let scores = [0, 0, 0, 0, 0, 0];
 let activeQuestions = [];
 let radarChart = null;
 let answerHistory = [];
-let ownResultIndex = null; // tracks user's actual result for explore mode
+let ownResultIndex = null;
+let currentViewIndex = null; // 当前展示的结果类型（用于分享卡）
 
 // ==================== 雷达图维度权重矩阵 ====================
 // 每种类型（PLANNER=0, PROCUREMENT=1, LOGISTICS=2, MANUFACTURE=3, DATA=4, PROJECT=5）
@@ -153,6 +154,7 @@ function showResult(forceIndex) {
   if (forceIndex === undefined) ownResultIndex = actualIndex;
 
   const resultIndex = (forceIndex !== undefined) ? forceIndex : actualIndex;
+  currentViewIndex = resultIndex;
   const result = RESULTS[resultIndex];
 
   // 找第二名（始终基于真实分数）
@@ -327,6 +329,45 @@ function renderRadar(themeColor, viewIndex) {
   });
 }
 
+// ==================== 分享卡 ====================
+
+function showShareCard() {
+  const idx = currentViewIndex !== null ? currentViewIndex : (ownResultIndex !== null ? ownResultIndex : 0);
+  const result = RESULTS[idx];
+
+  // 顶部彩色区域
+  document.getElementById('sc-top').style.background = result.color;
+  document.getElementById('sc-name').textContent = result.name;
+  document.getElementById('sc-en').textContent = result.englishName;
+  document.getElementById('sc-tagline').textContent = result.tagline;
+
+  // 人物插图
+  const avatarEl = document.getElementById('sc-avatar');
+  if (result.avatar) {
+    avatarEl.src = userGender === 'female' ? result.avatar.female : result.avatar.male;
+    avatarEl.style.display = 'block';
+  } else {
+    avatarEl.style.display = 'none';
+  }
+
+  // 关键词（取前3个）
+  document.getElementById('sc-keywords').innerHTML = result.keywords.slice(0, 3)
+    .map(k => `<span class="sc-kw" style="background:${result.lightColor};color:${result.color}">${k}</span>`)
+    .join('');
+
+  // 次要倾向
+  const badge = document.getElementById('result-second-badge');
+  document.getElementById('sc-secondary').textContent = badge ? badge.textContent : '';
+
+  document.getElementById('share-overlay').style.display = 'flex';
+}
+
+function closeShareCard(e) {
+  if (!e || e.target.id === 'share-overlay' || e.target.classList.contains('share-overlay-tip')) {
+    document.getElementById('share-overlay').style.display = 'none';
+  }
+}
+
 // ==================== 重新测试 ====================
 
 function restartQuiz() {
@@ -336,6 +377,7 @@ function restartQuiz() {
   scores = [0, 0, 0, 0, 0, 0];
   activeQuestions = [];
   ownResultIndex = null;
+  currentViewIndex = null;
   if (radarChart) { radarChart.dispose(); radarChart = null; }
   showPage('page-welcome');
 }
